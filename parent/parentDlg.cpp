@@ -169,7 +169,7 @@ HCURSOR CparentDlg::OnQueryDragIcon()
 
 #pragma comment(lib, "Shlwapi.lib")
 
-std::wstring GetFileDirectory(HINSTANCE hInstance = NULL)
+std::wstring GetFileDirectory(HINSTANCE hInstance = nullptr)
 {
 	wchar_t dir[MAX_PATH] = {};
 	GetModuleFileNameW(hInstance, dir, MAX_PATH);
@@ -182,8 +182,20 @@ void CparentDlg::OnBnClickedOk()
 	auto dir = GetFileDirectory();
 	dir += L"child.exe";
 
-	auto param = L"cmd";
-	ShellExecute(NULL, L"open", dir.c_str(), param, NULL, SW_HIDE);
+	//auto param = L"cmd";
+	//ShellExecute(nullptr, L"open", dir.c_str(), param, nullptr, SW_HIDE);
+
+	PROCESS_INFORMATION pi = {};
+	STARTUPINFO si = {};
+	si.cb = sizeof(STARTUPINFO);
+	si.dwFlags = STARTF_FORCEOFFFEEDBACK;
+	si.wShowWindow = SW_SHOW;
+	BOOL bOK = CreateProcess(dir.c_str(), nullptr, nullptr, nullptr, TRUE, CREATE_NO_WINDOW, nullptr, nullptr, &si, &pi);
+	if (bOK)
+	{
+		CloseHandle(pi.hThread);
+		CloseHandle(pi.hProcess);
+	}
 
 	m_btnRun.ShowWindow(SW_HIDE);
 }
@@ -200,12 +212,12 @@ void CparentDlg::OnBnClickedButtonAsChild()
 {
 	if (!m_pChildWnd || !IsWindow(m_pChildWnd->GetSafeHwnd()))
 	{
-		m_pChildWnd = FindWindow(NULL, L"IPCAMERA_CHILD");
+		m_pChildWnd = FindWindow(nullptr, L"IPCAMERA_CHILD");
 	}
 
 	if (m_pChildWnd && IsWindow(m_pChildWnd->GetSafeHwnd()))
 	{
-		m_pChildWnd->ModifyStyle(WS_POPUP | WS_BORDER | WS_DLGFRAME, WS_CHILD, NULL);
+		m_pChildWnd->ModifyStyle(WS_POPUP | WS_BORDER | WS_DLGFRAME, WS_CHILD, 0);
 
 		CRect rc;
 		GetClientRect(&rc);
@@ -224,6 +236,6 @@ void CparentDlg::OnBnClickedButtonAsPopup()
 	if (m_pChildWnd && IsWindow(m_pChildWnd->GetSafeHwnd()))
 	{
 		m_pChildWnd->SetParent(nullptr); // 先调用函数，再添加POPUP
-		m_pChildWnd->ModifyStyle(WS_CHILD, WS_POPUP | WS_BORDER | WS_DLGFRAME, NULL);
+		m_pChildWnd->ModifyStyle(WS_CHILD, WS_POPUP | WS_BORDER | WS_DLGFRAME, 0);
 	}
 }
