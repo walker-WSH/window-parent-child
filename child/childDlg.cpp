@@ -69,6 +69,7 @@ BEGIN_MESSAGE_MAP(CchildDlg, CDialogEx)
 	ON_BN_CLICKED(IDCANCEL, &CchildDlg::OnBnClickedCancel)
 	ON_BN_CLICKED(IDC_BUTTON1, &CchildDlg::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON2, &CchildDlg::OnBnClickedButton2)
+	ON_WM_ERASEBKGND()
 END_MESSAGE_MAP()
 
 
@@ -105,7 +106,7 @@ BOOL CchildDlg::OnInitDialog()
 
 	// TODO: 在此添加额外的初始化代码
 	SetWindowText(L"IPCAMERA_CHILD");
-	ModifyStyleEx(WS_EX_APPWINDOW, WS_EX_TOOLWINDOW);
+	ModifyStyleEx(WS_EX_APPWINDOW, WS_EX_TOOLWINDOW | WS_CLIPSIBLINGS);
 	MoveWindow(0, 0, 400, 300);
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
@@ -192,4 +193,11 @@ void CchildDlg::OnBnClickedButton1()
 void CchildDlg::OnBnClickedButton2()
 {
 	exit(1);
+}
+
+
+BOOL CchildDlg::OnEraseBkgnd(CDC* pDC)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	return TRUE;
 }
