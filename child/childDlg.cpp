@@ -106,7 +106,8 @@ BOOL CchildDlg::OnInitDialog()
 
 	// TODO: 在此添加额外的初始化代码
 	SetWindowText(L"IPCAMERA_CHILD");
-	ModifyStyleEx(WS_EX_APPWINDOW, WS_EX_TOOLWINDOW | WS_CLIPSIBLINGS);
+	ModifyStyleEx(WS_EX_APPWINDOW, WS_EX_TOOLWINDOW);
+	ModifyStyle(0, WS_CLIPSIBLINGS);
 	MoveWindow(0, 0, 400, 300);
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
