@@ -106,8 +106,11 @@ BOOL CchildDlg::OnInitDialog()
 
 	// TODO: 在此添加额外的初始化代码
 	SetWindowText(L"IPCAMERA_CHILD");
-	ModifyStyleEx(WS_EX_APPWINDOW, WS_EX_TOOLWINDOW);
+	ModifyStyleEx(WS_EX_APPWINDOW, WS_EX_TOOLWINDOW | WS_EX_TRANSPARENT| WS_EX_LAYERED);
 	ModifyStyle(0, WS_CLIPSIBLINGS);
+
+	::SetLayeredWindowAttributes(m_hWnd, 0, 254, LWA_ALPHA);
+
 	MoveWindow(0, 0, 400, 300);
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
@@ -132,27 +135,14 @@ void CchildDlg::OnSysCommand(UINT nID, LPARAM lParam)
 
 void CchildDlg::OnPaint()
 {
-	if (IsIconic())
-	{
-		CPaintDC dc(this); // 用于绘制的设备上下文
+	CPaintDC dc(this); // 用于绘制的设备上下文
 
-		SendMessage(WM_ICONERASEBKGND, reinterpret_cast<WPARAM>(dc.GetSafeHdc()), 0);
+	CRect rect;
+	GetClientRect(&rect);
 
-		// 使图标在工作区矩形中居中
-		int cxIcon = GetSystemMetrics(SM_CXICON);
-		int cyIcon = GetSystemMetrics(SM_CYICON);
-		CRect rect;
-		GetClientRect(&rect);
-		int x = (rect.Width() - cxIcon + 1) / 2;
-		int y = (rect.Height() - cyIcon + 1) / 2;
-
-		// 绘制图标
-		dc.DrawIcon(x, y, m_hIcon);
-	}
-	else
-	{
-		CDialogEx::OnPaint();
-	}
+	COLORREF clr(0X00FF00);
+	CBrush b(clr);
+	dc.FillRect(&rect, &b);
 }
 
 //当用户拖动最小化窗口时系统调用此函数取得光标
