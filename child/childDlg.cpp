@@ -70,6 +70,9 @@ BEGIN_MESSAGE_MAP(CchildDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON1, &CchildDlg::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON2, &CchildDlg::OnBnClickedButton2)
 	ON_WM_ERASEBKGND()
+	ON_BN_CLICKED(IDC_BUTTON3, &CchildDlg::OnBnClickedButton3)
+	ON_BN_CLICKED(IDC_BUTTON4, &CchildDlg::OnBnClickedButton4)
+	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 
@@ -106,13 +109,14 @@ BOOL CchildDlg::OnInitDialog()
 
 	// TODO: 在此添加额外的初始化代码
 	SetWindowText(L"IPCAMERA_CHILD");
-	ModifyStyleEx(WS_EX_APPWINDOW, WS_EX_TOOLWINDOW | WS_EX_TRANSPARENT| WS_EX_LAYERED);
+	ModifyStyleEx(WS_EX_APPWINDOW, WS_EX_TOOLWINDOW /*| WS_EX_TRANSPARENT| WS_EX_LAYERED*/);
 	ModifyStyle(0, WS_CLIPSIBLINGS);
 
 	::SetLayeredWindowAttributes(m_hWnd, 0, 254, LWA_ALPHA);
 
 	MoveWindow(0, 0, 400, 300);
 
+	SetTimer(2000, 2000, NULL);
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -191,4 +195,42 @@ BOOL CchildDlg::OnEraseBkgnd(CDC* pDC)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
 	return TRUE;
+}
+
+
+void CchildDlg::OnBnClickedButton3()
+{
+	CRect rc;
+	GetWindowRect(&rc);
+
+	rc.left -= 20;
+	rc.right -= 20;
+
+	MoveWindow(&rc);
+}
+
+
+void CchildDlg::OnBnClickedButton4()
+{
+	CRect rc;
+	GetWindowRect(&rc);
+
+	rc.left += 20;
+	rc.right += 20;
+
+	MoveWindow(&rc);
+}
+
+
+void CchildDlg::OnTimer(UINT_PTR nIDEvent)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	if (IsWindowVisible()) {
+		ShowWindow(SW_HIDE);
+	}
+	else {
+		ShowWindow(SW_SHOW);
+	}
+
+	CDialogEx::OnTimer(nIDEvent);
 }
