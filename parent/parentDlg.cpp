@@ -216,6 +216,15 @@ void CparentDlg::OnBnClickedOk()
 		CloseHandle(pi.hThread);
 		child_process = pi.hProcess;
 		//CloseHandle(pi.hProcess);
+
+		HANDLE job_handle = ::CreateJobObject(nullptr, nullptr);
+		::AssignProcessToJobObject(job_handle, pi.hProcess);
+
+		JOBOBJECT_EXTENDED_LIMIT_INFORMATION limit_info = {};
+		limit_info.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
+		::SetInformationJobObject(job_handle, JobObjectExtendedLimitInformation, &limit_info, sizeof(limit_info));
+
+		// 程序退出时  应该手动closehandle(job_handle),  当然 不调用  系统也会自动回收
 	}
 }
 
