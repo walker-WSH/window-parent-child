@@ -169,6 +169,8 @@ HCURSOR CparentDlg::OnQueryDragIcon()
 
 #pragma comment(lib, "Shlwapi.lib")
 
+HANDLE child_process = 0;
+
 std::wstring GetFileDirectory(HINSTANCE hInstance = nullptr)
 {
 	wchar_t dir[MAX_PATH] = {};
@@ -179,6 +181,24 @@ std::wstring GetFileDirectory(HINSTANCE hInstance = nullptr)
 
 void CparentDlg::OnBnClickedOk()
 {
+	if (child_process) {
+		auto ret = WaitForSingleObject(child_process, 0);
+		if (ret == WAIT_OBJECT_0) {
+			DWORD exit = 0;
+			GetExitCodeProcess(child_process, &exit);
+
+			CString str;
+			str.Format(L"exit code: %u", exit);
+			MessageBox(str, str, 0);
+
+			CloseHandle(child_process);
+			child_process = 0;
+		}
+		else {
+			return;
+		}
+	}
+
 	auto dir = GetFileDirectory();
 	dir += L"child.exe";
 
@@ -194,10 +214,9 @@ void CparentDlg::OnBnClickedOk()
 	if (bOK)
 	{
 		CloseHandle(pi.hThread);
-		CloseHandle(pi.hProcess);
+		child_process = pi.hProcess;
+		//CloseHandle(pi.hProcess);
 	}
-
-	m_btnRun.ShowWindow(SW_HIDE);
 }
 
 #include <thread>

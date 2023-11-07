@@ -187,7 +187,7 @@ void CchildDlg::OnBnClickedButton1()
 
 void CchildDlg::OnBnClickedButton2()
 {
-	exit(1);
+	exit(1999);
 }
 
 
@@ -225,12 +225,12 @@ void CchildDlg::OnBnClickedButton4()
 void CchildDlg::OnTimer(UINT_PTR nIDEvent)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
-	if (IsWindowVisible()) {
-		ShowWindow(SW_HIDE);
-	}
-	else {
-		ShowWindow(SW_SHOW);
-	}
+	//if (IsWindowVisible()) {
+	//	ShowWindow(SW_HIDE);
+	//}
+	//else {
+	//	ShowWindow(SW_SHOW);
+	//}
 
 	CDialogEx::OnTimer(nIDEvent);
 }
